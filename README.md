@@ -50,6 +50,14 @@ Also, the included CSV converter tool can provide the same functionality, but co
     Install dependencies with:
 ```pip install -r requirements.txt```
 
+## Important Notes
+
+    - Security Considerations: Nessus files often contain sensitive information. Ensure that your use of this tool complies with your organization's security policies and does not expose sensitive data.
+
+    - Ethical Use: This tool is intended for ethical use by security professionals or organizations conducting authorized vulnerability assessments. Do not use it for malicious purposes.
+
+    - Tenable Licensing: Ensure compliance with Tenable's licensing agreements when using this tool with Nessus scan data.
+
 ## Contribution
 
 Contributions are welcome! Feel free to open issues or submit pull requests.
