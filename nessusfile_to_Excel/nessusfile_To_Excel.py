@@ -48,29 +48,9 @@ def process_nessus_file(soup):
 def format_dataframe(df):
     """Formats the DataFrame by renaming, reordering columns, and sorting."""
     df.rename(columns={"ReportHost Name": "Host"}, inplace=True)
-
-    primary_columns = ["Host", "cve", "cvss_base_score", "risk_factor"]
-    cvss_columns = [col for col in df.columns if "cvss" in col and col != "cvss_base_score"]
-    specific_columns = ["synopsis", "solution", "see_also"]
-
-    new_column_order = primary_columns + cvss_columns + specific_columns
-    remaining_columns = [col for col in df.columns if col not in new_column_order]
-    final_columns = new_column_order + remaining_columns
-
-    df = df[final_columns]
-    sort_columns = []
-
-    if "cvss_base_score" in df.columns:
-        df["cvss_base_score"] = pd.to_numeric(df["cvss_base_score"], errors="coerce")
-        sort_columns = ["cvss_base_score"]
-
-    if "cvss3_base_score" in df.columns:
-        df["cvss3_base_score"] = pd.to_numeric(df["cvss3_base_score"], errors="coerce")
-        sort_columns.append("cvss3_base_score")
-
-    df.sort_values(by=sort_columns, ascending=False, inplace=True)
-
-    return df
+    df2=df.loc[:, ['cve','cvss3_base_score','cvss_base_score','exploit_available','risk_factor','description','synopsis','solution','cisa-known-exploited','vendor_severity','see_also','rhsa','plugin_output','age_of_vuln']]
+    df2.sort_values(by='cvss3_base_score', ascending=False, inplace=True)
+    return df2
 
 def export_dataframe(df, output_file):
     """Exports the DataFrame to an Excel file with styled formatting."""
