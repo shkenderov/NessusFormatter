@@ -29,6 +29,7 @@ def process_nessus_file(soup):
         row = {}
         row["ReportHost Name"] = host.get("name", "Unknown")
 
+        
         for tag_name in unique_tags:
             tag = host.find(tag_name)
             row[tag_name] = tag.text if tag else None
@@ -41,15 +42,26 @@ def process_nessus_file(soup):
                 parent_data[child.name] = child.text
 
             data_rows.append(parent_data)
-
+    
     df = pd.DataFrame(data_rows)
     return df
 
 def format_dataframe(df):
     """Formats the DataFrame by renaming, reordering columns, and sorting."""
     df.rename(columns={"ReportHost Name": "Host"}, inplace=True)
-    df2=df.loc[:, ['cve','cvss3_base_score','cvss_base_score','exploit_available','risk_factor','description','synopsis','solution','cisa-known-exploited','vendor_severity','see_also','rhsa','plugin_output','age_of_vuln']]
-    df2.sort_values(by='cvss3_base_score', ascending=False, inplace=True)
+    columns_to_copy = ['cve', 'Host', 'cvss3_base_score', 'cvss_base_score', 'exploit_available', 'risk_factor', 'description', 
+                    'synopsis', 'solution', 'cisa-known-exploited', 'vendor_severity', 'see_also', 'rhsa', 
+                    'plugin_output', 'age_of_vuln']
+
+    # Filter columns while preserving the original order
+    columns_found = [col for col in columns_to_copy if col in df.columns]
+
+    df2 = df.loc[:, columns_found]
+    if "cvss3_base_score" in df2.columns:
+        df2.sort_values(by='cvss3_base_score', ascending=False, inplace=True)
+    if df.empty:
+        return df
+
     return df2
 
 def export_dataframe(df, output_file):
@@ -100,6 +112,8 @@ def main():
 
         # Format DataFrame
         df = format_dataframe(df)
+        if "cvss3_base_score" in df.columns:
+            df = df.drop_duplicates(subset=['cve'])
 
         # Export DataFrame
         export_dataframe(df, args.output_file)
