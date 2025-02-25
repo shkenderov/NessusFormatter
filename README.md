@@ -38,6 +38,15 @@ Also, the included CSV converter tool can provide the same functionality, but co
     - Input: Path to the Nessus CSV file.
     - Output: Path to the formatted Excel file (.xlsx).
 
+### **3. Excel Spreadsheet merger**
+- Merges a number of excel output spreadsheets in case user wants results combined in one place
+- Features include:
+    - Drops Host and CVE duplicate pairs.
+    - Sorting rows by the CVSSv3 score column (if available).
+-Usage:
+    ```Usage: python script.py <num_files> <output_filename>```
+    The user is then prompted for path to each file
+
 ## **Prerequisites**
 
 - Python 3.13 or later.
